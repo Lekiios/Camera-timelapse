@@ -1,0 +1,20 @@
+{
+  "name": "backend",
+  "packageManager": "yarn@4.1.1",
+  "dependencies": {
+    "@fastify/multipart": "^8.2.0",
+    "csv": "^6.3.8",
+    "fastify": "^4.26.2",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "nodemon": "^3.1.0",
+    "typescript": "^5.4.5"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts"
+  }
+}
