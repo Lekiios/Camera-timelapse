@@ -3,7 +3,6 @@ import fs from "fs";
 import {parse} from "csv-parse";
 
 
-
 const getData = (deviceId: string, timelapseId: string, lines: number): Promise<{tempData: Array<number>, humidityData: Array<number>}> => {
     return new Promise((resolve, reject) => {
         const tempData: Array<number> = [];
@@ -30,7 +29,6 @@ const getData = (deviceId: string, timelapseId: string, lines: number): Promise<
     })
 
 }
-
 
 type UploadFileReq = FastifyRequest<{
     Querystring: { deviceId: string, timelapseId: string, lines: number }
