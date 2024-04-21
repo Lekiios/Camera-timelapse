@@ -1,36 +1,39 @@
-import {FastifyInstance, FastifyReply, FastifyRequest} from "fastify";
 import fs from "fs";
-import {parse} from "csv-parse";
-import * as repl from "node:repl";
+import { server } from "../providers/server";
+import { timelapseQuery } from "../schemas";
 
+server.get(
+  "/timelapse",
+  {
+    schema: {
+      querystring: timelapseQuery,
+    },
+  },
+  async function (request, reply) {
+    const { deviceId, timelapse } = request.query;
 
-type UploadFileReq = FastifyRequest<{
-    Querystring: { deviceId: string, timelapse: string }
-}>
+    if (!deviceId) {
+      return reply
+        .code(400)
+        .send({ error: "deviceId query parameter is required" });
+    }
 
-export const timelapseRoute = (server: FastifyInstance) => {
-    server.get('/timelapse', async function (request: UploadFileReq, reply: FastifyReply) {
+    if (!timelapse) {
+      return reply
+        .code(400)
+        .send({ error: "timelapse query parameter is required" });
+    }
 
-        const {deviceId, timelapse} = request.query;
+    const timelapseFile = `./test_data/${deviceId}/timelapses/${timelapse}`;
+    if (!fs.existsSync(timelapseFile)) {
+      return reply.code(404).send({
+        error: `No timelapse ${timelapse} for device : ${deviceId} `,
+      });
+    }
 
-        if(!deviceId) {
-            return reply.code(400).send({error: "deviceId query parameter is required"})
-        }
+    const stream = fs.createReadStream(timelapseFile);
+    reply.header("Content-Type", "application/octet-stream");
 
-        if(!timelapse) {
-            return reply.code(400).send({error: "timelapse query parameter is required"})
-        }
-
-        const timelapseFile = `./test_data/${deviceId}/timelapses/${timelapse}`
-        if (!fs.existsSync(timelapseFile)) {
-            return reply.code(404).send({error: `No timelapse ${timelapse} for device : ${deviceId} `})
-        }
-
-        const stream = fs.createReadStream(timelapseFile)
-        reply.header('Content-Type', 'application/octet-stream')
-
-        return reply.send(stream)
-    });
-
-}
-
+    return reply.send(stream);
+  },
+);
