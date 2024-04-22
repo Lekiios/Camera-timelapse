@@ -1,4 +1,7 @@
 .idea/
+backend/.idea
 
 backend/dist/
 backend/node_modules/
+backend/uploads/
+backend/data/

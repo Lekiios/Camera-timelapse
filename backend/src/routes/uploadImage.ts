@@ -2,7 +2,7 @@ import fs from "fs";
 import { pipeline } from "stream";
 import util from "util";
 import { server } from "../providers/server";
-import { uploadImageQuery, uploadImageResponse } from "../schemas";
+import { messageResponse, uploadImageQuery } from "../schemas";
 
 const pump = util.promisify(pipeline);
 
@@ -20,7 +20,7 @@ server.post(
         },
       },*/
       response: {
-        200: uploadImageResponse,
+        200: messageResponse,
       },
     },
   },

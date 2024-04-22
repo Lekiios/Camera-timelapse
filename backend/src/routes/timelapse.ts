@@ -7,6 +7,7 @@ server.get(
   {
     schema: {
       querystring: timelapseQuery,
+      tags: ["Timelapse"],
     },
   },
   async function (request, reply) {
@@ -24,7 +25,7 @@ server.get(
         .send({ error: "timelapse query parameter is required" });
     }
 
-    const timelapseFile = `./test_data/${deviceId}/timelapses/${timelapse}`;
+    const timelapseFile = `./data/${deviceId}/timelapses/${timelapse}`;
     if (!fs.existsSync(timelapseFile)) {
       return reply.code(404).send({
         error: `No timelapse ${timelapse} for device : ${deviceId} `,

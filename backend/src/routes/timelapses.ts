@@ -11,6 +11,7 @@ server.get(
         200: timelapsesResponse,
         400: errorResponse,
       },
+      tags: ["Timelapse"],
     },
   },
   async function (request, reply) {
@@ -22,7 +23,7 @@ server.get(
         .send({ error: "deviceId query parameter is required" });
     }
 
-    const timelapsesFolder = `./test_data/${deviceId}/timelapses`;
+    const timelapsesFolder = `./data/${deviceId}/timelapses`;
     if (!fs.existsSync(timelapsesFolder)) {
       return reply
         .code(404)

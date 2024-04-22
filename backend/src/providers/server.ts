@@ -19,6 +19,10 @@ export const configurePlugins = async () => {
     swagger: {
       consumes: ["application/json", "multipart/form-data"],
       produces: ["application/json"],
+      tags: [
+        { name: "Data", description: "Data related end-points" },
+        { name: "Timelapse", description: "Timelapse related end-points" },
+      ],
     },
   });
   await server.register(fastifySwaggerUi, {

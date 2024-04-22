@@ -18,6 +18,8 @@ const main = async () => {
       await import("./routes/timelapses"),
       await import("./routes/timelapse"),
       await import("./routes/uploadImage"),
+      await import("./routes/beginTimelapse"),
+      await import("./routes/endTimelapse"),
     ]);
 
     await server.listen({
