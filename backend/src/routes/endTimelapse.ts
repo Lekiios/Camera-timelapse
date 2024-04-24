@@ -66,7 +66,7 @@ server.post(
     }
 
     // TODO: Make input framerate higher
-    const COMMAND = `ffmpeg -framerate 1 -i ${timelapseUploadDir}/%d.jpg -c:v libx264 -r 24  -pix_fmt yuv420p ${outputDir}/${timelapse}.mp4`;
+    const COMMAND = `ffmpeg -framerate 2 -i ${timelapseUploadDir}/%d.jpg -c:v libx264 -r 24  -pix_fmt yuv420p ${outputDir}/${timelapse}.mp4`;
     try {
       exec(COMMAND, (error, stdout, stderr) => {
         console.log(stdout);
