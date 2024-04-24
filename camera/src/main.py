@@ -4,12 +4,17 @@ import json
 import requests
 from picamera import PiCamera
 from time import sleep
+import datetime
+import Adafruit_DHT
+
+#Configuration du type de sonde et du PIN
+sensor = 22
+pin = 4
 
 def data_received(data):
         s.send("{\"received\": \"true\"}")
         print(data)
         json_data = json.loads(data)
-        print(json_data)
 
         if(json_data["command"] == "begin_timelapse"):
             print("Begin timelapse")
@@ -22,7 +27,7 @@ def data_received(data):
 
                 camera = PiCamera()
                 camera.resolution = (640, 480)
-                camera.rotation = 180
+                camera.rotation = 90
 
                 for i in range(time//interval):
                     file_path = '/home/pi/image{}.jpg'.format(str(i))
@@ -32,6 +37,21 @@ def data_received(data):
                     files = {str(i): ('{}.jpg'.format(str(i)), open('image{}.jpg'.format(str(i)), 'rb'))}
 
                     r = requests.post(url, files=files)
+                    print("uploadImage: " + r.text)
+
+                    humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
+                    #Récupération du temps
+                    ts = str(datetime.datetime.now())
+
+                    url = 'http://82.66.23.161:42069/data?deviceId=time-cam-1&timelapse=' + timelapse
+                    data = {
+                        'temp': str(temperature),
+                        'humidity': str(humidity),
+                        'timestamp': ts
+                    }
+
+                    r = requests.post(url, json=data)
+                    print("postData: " + r.text)
                     sleep(interval)
 
                 camera.close()
@@ -43,4 +63,6 @@ def data_received(data):
 
 
 s = BluetoothServer(data_received)
+print("BluetoothServer started !")
+print("Waiting for connection...")
 pause()
