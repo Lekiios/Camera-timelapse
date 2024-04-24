@@ -6,6 +6,7 @@ from picamera import PiCamera
 import time
 from time import sleep
 import Adafruit_DHT
+import os
 
 # Configuration du type de sonde et du PIN
 sensor = 22
@@ -41,10 +42,11 @@ def data_received(data):
         if r.status_code == 200:
 
             camera = PiCamera()
-            camera.resolution = (1280, 720)
+            camera.resolution = (640, 480)
             camera.rotation = 180
 
-            for i in range(duration // interval):
+            it = duration // interval
+            for i in range(it):
                 start_time = time.time()
 
                 file_path = '/home/pi/image{}.jpg'.format(str(i))
@@ -84,6 +86,10 @@ def data_received(data):
             url = 'http://82.66.23.161:42069/end-timelapse?deviceId=time-cam-1&timelapse=' + timelapse
             r = requests.post(url)
             print('Timelapse ended')
+
+            for i in range(it):
+                os.remove('/home/pi/image{}.jpg'.format(str(i)))
+
         else:
             print("Error beginning timelapse " + r.text)
             s.send("{\"error\": \"{0}\"}".format(r.text))
